@@ -1,6 +1,6 @@
 #---------------------------------------
 #Since : 2018/06/01
-#Update: 2021/01/27
+#Update: 2021/04/09
 # -*- coding: utf-8 -*-
 #---------------------------------------
 
@@ -57,11 +57,11 @@ class SomSpectralClustering:
 
     def fit(self):
         if self.som == "GNG":
-            aff_net = GNG(num = self.n, end = 100000, lam = 250, ew = 0.05, en = 0.005, amax = 75, alpha = 0.5,  beta = 0.999, sig_kernel = 0.25)
+            aff_net = GNG(num = self.n, end = 100000, lam = 250, ew = 0.1, en = 0.01, amax = 75, alpha = 0.25,  beta = 0.999, sig_kernel = 0.25)
         elif self.som == "Kohonen":
-            aff_net = Kohonen(num = self.n, dim = self.x.shape[1], end = 100000, rate = 0.1, sigma = 0.5, sig_kernel = 0.25)
-        else:
-            aff_net = NG(num = self.n, end = 100000, lam_i = 1.0, lam_f = 0.01, ew_i = 0.1, ew_f = 0.005, amax_i = 75.0, amax_f = 300.0, sig_kernel = 0.25)
+            aff_net = Kohonen(num = self.n, dim = self.x.shape[1], end = 100000, rate = 0.05, sigma = 1.0, sig_kernel = 0.5)
+        elif self.som == "NG":
+            aff_net = NG(num = self.n, end = 100000, lam_i = 1.0, lam_f = 0.01, ew_i = 0.1, ew_f = 0.05, amax_i = 50.0, amax_f = 200.0, sig_kernel = 0.25)
 
         # make affinity matrix using SOM
         aff_net.train(self.x)
