@@ -1,6 +1,6 @@
 #---------------------------------------
 #Since : Jun/17/2012
-#Update: 2020/12/25
+#Update: 2021/06/06
 # -*- coding: utf-8 -*-
 #---------------------------------------
 from PIL import Image
@@ -74,12 +74,6 @@ class GNG(object):
         A = A * self.kernel(self.units)
         return A
 
-    def normalize(self, data):
-        self.mindata = data[np.argmin(np.linalg.norm(data, axis=1))]
-        self.diff_max_min = np.linalg.norm( data[np.argmax(np.linalg.norm(data, axis=1))] - data[np.argmin(np.linalg.norm(data, axis=1))])
-        data = (data - self.mindata) / self.diff_max_min
-        return data
-
     def train(self, data):
         self.initialize_units(data)
 
@@ -120,7 +114,7 @@ class GNG(object):
                 # Move the neighbors of s_1 towards the input.
                 units[i] += self.En  * self.dw(x, units[i])
 
-                # Remove the edges with their age larger than a_max. 
+                # Remove the edges with their age larger than a_max.
                 if g_units[s_1][i]['weight'] > self.AMAX:
                     g_units.remove_edge(s_1,i)
                 # If the node has no emanating edges, remove it.

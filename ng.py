@@ -1,6 +1,6 @@
 #---------------------------------------
 #Since : Jun/17/2012
-#Update: 2020/12/25
+#Update: 2021/06/06
 # -*- coding: utf-8 -*-
 #---------------------------------------
 import numpy as np
@@ -63,13 +63,6 @@ class NG(object):
         A = A * self.kernel(self.units)
         return A
 
-    def normalize(self, data):
-    # normalize dataset
-        self.mindata = data[np.argmin(np.linalg.norm(data, axis=1))]
-        self.diff_max_min = np.linalg.norm( data[np.argmax(np.linalg.norm(data, axis=1))] - data[np.argmin(np.linalg.norm(data, axis=1))])
-        data = (data - self.mindata) / self.diff_max_min
-        return data
-
     def gt(self, gi, gf, t, tmax):
         return gi * ( (gf / gi) ** (t/tmax) )
 
@@ -88,7 +81,7 @@ class NG(object):
             num = np.random.randint(self.N)
             x = data[num]
 
-            # Determine the neighborhood-ranking. 
+            # Determine the neighborhood-ranking.
             dists = self.dists(x, units)
             sequence = dists.argsort()
 
