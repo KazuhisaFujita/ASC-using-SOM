@@ -1,6 +1,6 @@
 #---------------------------------------
 #Since : 2018/06/01
-#Update: 2021/04/09
+#Update: 2021/06/07
 # -*- coding: utf-8 -*-
 #---------------------------------------
 
@@ -35,9 +35,8 @@ class SomSpectralClustering:
     # normalize data points
     def normalize(self, data):
         norm_data = np.linalg.norm(data, axis=1)
-        mindata = data[np.argmin(norm_data)]
-        diff_max_min = np.linalg.norm(data[np.argmax(norm_data)] - data[np.argmin(norm_data)])
-        data = (data - mindata) / diff_max_min
+        max_norm = np.linalg.norm(data[np.argmax(norm_data)])
+        data /= max_norm
         return data
 
     # calculate normalized Laplacian matrix
