@@ -62,24 +62,28 @@ class SomSpectralClustering:
         elif self.som == "NG":
             aff_net = NG(num = self.n, end = 100000, lam_i = 1.0, lam_f = 0.01, ew_i = 0.5, ew_f = 0.005, amax_i = 100.0, amax_f = 300.0, sig_kernel = 0.25)
 
-        # make affinity matrix using SOM
+        # make the affinity matrix using SOM
         aff_net.train(self.x)
 
+        # save the affinity matrix
+        self.affinity = aff_net.affinity()
+
         # calculate Laplacian matrix and its eigen vectors
-        self.L = self.Laplacian(aff_net.affinity())
+        self.L = self.Laplacian(self.affinity)
         eig_val, eig_vec = np.linalg.eig(self.L)
         eig_vec = eig_vec.real
 
         # assign the units to the clusters
         kmeans = KMeans(n_clusters=self.k)
-        labels_units = kmeans.fit(eig_vec[:,np.argsort(eig_val)[0:self.k]]).labels_
+        self.labels_units = kmeans.fit(eig_vec[:,np.argsort(eig_val)[0:self.k]]).labels_
+
         self.units = aff_net.units
 
         # assing the data points to the clusters
         self.labels = np.zeros(self.num)
         for i in range(self.num):
             distances =  np.linalg.norm(self.units - self.x[i], axis = 1)
-            self.labels[i]= labels_units[np.argmin(distances)]
+            self.labels[i]= self.labels_units[np.argmin(distances)]
 
         return self.labels
 
