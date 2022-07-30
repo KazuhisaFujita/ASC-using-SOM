@@ -1,6 +1,6 @@
 #---------------------------------------
 #Since : Jun/17/2012
-#Update: 2021/06/06
+#Update: 2022/07/30
 # -*- coding: utf-8 -*-
 #---------------------------------------
 from PIL import Image
@@ -122,7 +122,6 @@ class GNG(object):
                     g_units.remove_node(i)
                     units[i] += float("inf")
                     sumerror[i] = 0
-                    #end set
 
             # Every lambda, insert a new neuron.
             count += 1
@@ -162,8 +161,17 @@ class GNG(object):
             # Decrease all errors.
             sumerror *= self.Beta
 
-        self.units = self.units[np.isfinite(units[:,0])]
+        nodes = np.array(g_units.nodes)
+        temp_units = np.zeros((nodes.size, self.I_DIM))
+        temp_g_units = nx.Graph()
+        for i in range(nodes.size):
+            temp_units[i] = units[nodes[i]]
+            temp_g_units.add_node(i)
+        for edge in g_units.edges:
+            temp_g_units.add_edge(np.argwhere(nodes == edge[0]).item(0), np.argwhere(nodes == edge[1]).item(0))
 
+        self.units = temp_units
+        self.g_units = temp_g_units
 
 
 if __name__ == '__main__':
